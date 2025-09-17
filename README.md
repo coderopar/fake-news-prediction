@@ -27,7 +27,6 @@ fake-news-detection/
 ├── .gitignore                    # Ignore data/, cache, artifacts
 ├── requirements.txt              # Project dependencies
 ├── README.md                     # Project overview and repo guide
-└── LICENSE                       # License information (if open-sourced)
 ```
 
 ## Getting Started
