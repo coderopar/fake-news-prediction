@@ -3,3 +3,5 @@ data/*
 
 # But keep the folder itself
 !data/.gitkeep
+
+notebooks/unzipped_data/*
