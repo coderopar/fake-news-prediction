@@ -1,38 +1,165 @@
 # Fake News Detection Project
 
-This repository contains the implementation of a machine learning project for **fake news detection** using Logistic Regression, LSTM, and BERT models. It also includes deployment (Streamlit) and visualization (Tableau).
+## Overview
+This project aims to **detect fake news articles** using multiple machine learning and deep learning models.  
+It compares traditional models like **Logistic Regression (TF–IDF)** with deep models like **LSTM** and **BERT**, evaluating their accuracy, F1-score, and robustness across **cleaned** and **combined** text datasets.
+
+The system is designed to run both **locally** and on **Kaggle** with GPU acceleration, supporting smooth transitions between environments.
+
+---
 
 ## Repository Structure
 
-```text
+```
 fake-news-detection/
 │
-├── data/                         # (Keep this in .gitignore if large)
-│   # Store datasets here (raw, interim, processed)
+├── data/                         # Raw, processed, and split datasets (.gitignored)
 │
-├── notebooks/                    # Jupyter/Colab exploratory notebooks
-│   └── fake-news-detection.ipynb # Main notebook for data prep and modelling
+├── notebooks/
+│   └── fake-news-detection.ipynb  # Main notebook: preprocessing, modelling, evaluation
 │
-├── deployment/                   # Streamlit app
-│   ├── app.py                    # Main Streamlit script
-│   └── requirements.txt          # Dependencies for deployment
+├── deployment/
+│   ├── app.py                    # Streamlit web app for live fake news detection
+│   └── requirements.txt          # Dependencies for deployment environment
 │
-├── dashboard/                    # Tableau dashboard exports
-│   ├── tableau_workbook.twb      # Tableau workbook file
-│   └── tableau_screenshots/      # Exported screenshots of visuals
+├── dashboard/
+│   └──tableau_screenshots/      # Screenshots or exports of dashboards
+│        
 │
-├── presentation/                 # Reports, presentations, documents
-│   └── presentation.pptx         # Agile workflow slides and results
+├── presentation/
+│   └── presentation.pptx         # Project slides (workflow, results, insights)
 │
-├── .gitignore                    # Ignore data/, cache, artifacts
-├── requirements.txt              # Project dependencies
-├── README.md                     # Project overview and repo guide
+├── .gitignore                    # Ignores data/, cache, and large artifacts
+├── requirements.txt              # Global dependencies for local runs
+├── README.md                     # Project documentation (you’re here)
 ```
 
-## Getting Started
+---
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/yourusername/fake-news-detection.git
-   cd fake-news-detection
+## Environment Setup
+
+### Option 1 — Local setup
+
+```bash
+# Clone repo
+git clone https://github.com/<your-username>/fake-news-detection.git
+cd fake-news-detection
+
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # or venv\Scripts\activate on Windows
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
+Place your dataset archive (e.g. `archive.zip`) in the `data/` directory before running the notebook.
+
+---
+
+### Option 2 — Run on Kaggle
+
+1. Upload the notebook to Kaggle.  
+2. Set **Settings** → **Accelerator** → **GPU T4 x 2**.  
+3. Mount dataset under `/kaggle/input/fake-news-dataset/archive.zip`.  
+4. The notebook automatically detects the Kaggle environment and sets all paths accordingly (`/kaggle/working/...`).
+
+---
+
+##  Model Pipelines
+
+| Model | Description | Input Type | Notes |
+|-------|--------------|------------|-------|
+| **Logistic Regression (TF–IDF)** | Classical baseline with vectorized word frequencies. | Clean & combined text | Fast, interpretable baseline. |
+| **LSTM (Keras)** | Deep sequential model capturing long-term dependencies. | Tokenized padded sequences | Tuned for accuracy and generalization. |
+| **BERT (HuggingFace Transformers)** | Pretrained transformer fine-tuned on fake/real labels. | Clean & combined text | GPU-intensive but highest F1. |
+
+---
+
+## Notebook Flow
+
+1. **Imports and Setup**  
+   - Downloads NLTK resources (stopwords, wordnet, punkt).  
+   - Detects environment (local/Kaggle) and sets file paths accordingly.
+
+2. **Data Loading and Extraction**  
+   - Extracts the dataset archive.  
+   - Reads and merges training and test CSVs.
+
+3. **Data Understanding   
+
+3. **Text Preprocessing**  
+   - Cleaning: lowercasing, removing URLs, punctuation, and stopwords.  
+   - Lemmatization: normalizing words.  
+   - Combination: merging title + text for the “combined” dataset.
+
+4. **Model Training**  
+   - Logistic Regression trained on TF–IDF features.  
+   - LSTM model created via custom `create_lstm_model()` function.  
+   - BERT fine-tuned using HuggingFace `Trainer` API.
+
+5. **Evaluation**  
+   - Accuracy, Precision, Recall, and F1-score computed for each variant.  
+   - Stored predictions for Comparison Table
+
+6. **Artifact Saving**  
+   - Trained models, vectorizers, and plots saved to `models/` and `results/` subfolders (auto-created).
+
+7. **Comparison Table**
+   ```text
+   | Model | Variant  | Accuracy | Precision | Recall | F1 |
+
    ```
+---
+
+## Deployment
+- A Dash app deployed at `https://capstone-project-f85dcbe34c51.herokuapp.com/`. The link is also in the repository's `About` section
+
+---
+
+## Results Table
+
+| **Model** | **Variant** | **Accuracy** | **Precision** | **Recall** | **F1-score** |
+|:-----------|:-------------|:-------------|:--------------|:------------|:--------------|
+| **BERT** | Combined | 0.999095 | 0.999095 | 0.999095 | 0.999095 |
+| **LSTM** | Clean | 0.998869 | 0.998871 | 0.998869 | 0.998868 |
+| **BERT** | Clean | 0.998416 | 0.998417 | 0.998416 | 0.998416 |
+| **LSTM** | Combined | 0.998190 | 0.998190 | 0.998190 | 0.998190 |
+| **LogReg** | Clean | 0.987101 | 0.987141 | 0.987101 | 0.987103 |
+| **LogReg** | Combined | 0.986875 | 0.986958 | 0.986875 | 0.986877 |
+
+---
+
+## Dashboard and Presentation
+
+- **Tableau Dashboard:** Visualizes class distributions, model comparisons, and top words in fake vs real news.  
+- **Presentation Slides:** Summarize the project workflow, results, and recommendations for deployment.
+
+---
+
+## Key Highlights
+
+- End-to-end reproducibility (Kaggle or local)  
+- Modular directory structure (data → model → deployment)  
+- Supports multiple model types (classical, deep learning, transformer)  
+- Includes visualization & deployment artifacts  
+- Clean, well-documented notebook and codebase  
+
+---
+
+## Future Work
+
+- Integrate **attention visualization** for BERT predictions.  
+- Extend to **multilingual fake news** datasets.  
+- Deploy on **HuggingFace Spaces** or **AWS Lambda**.  
+- Add **explainability (SHAP/LIME)** components.
+
+---
+
+## Contributors
+- Steve Opar
+- Kelly Kihige
+- Kungu Washington
+- Olive Njeri
+- Mercy Chepkorir
+- Esterina Kananu
