@@ -36,6 +36,37 @@ fake-news-detection/
 
 ---
 
+## Data Source
+
+### Description
+
+This dataset is a collection of news articles labeled as either **“fake”** or **“real”**.  
+It is designed for **binary classification** tasks in **natural language processing (NLP)**, especially for **fake news detection**.
+
+It is also referred to as the **ISOT Fake News Detection Dataset**.  
+*(Source: [Kaggle](https://www.kaggle.com/datasets/clmentbisaillon/fake-and-real-news-dataset))*
+
+The dataset comprises **two CSV files** containing the articles and their labels.  
+*(Source: [Kaggle](https://www.kaggle.com/datasets/clmentbisaillon/fake-and-real-news-dataset))*
+
+The total size is about **43 MB**.  
+*(Source: [Kaggle](https://www.kaggle.com/datasets/clmentbisaillon/fake-and-real-news-dataset))*
+
+It is downloaded as one .zip file called `archive.zip`
+
+---
+
+### Contents / Structure
+
+Each record (row) in the dataset typically contains:
+
+| **Column** | **Description** |
+|:------------|:----------------|
+| `title` | The headline or title of the news article |
+| `text` | The full text or body of the news article |
+| `subject` | Subject that the article covers |
+| `date` | The date when the article was released |
+
 ## Environment Setup
 
 ### Option 1 — Local setup
@@ -84,28 +115,31 @@ Place your dataset archive (e.g. `archive.zip`) in the `data/` directory before 
 
 2. **Data Loading and Extraction**  
    - Extracts the dataset archive.  
-   - Reads and merges training and test CSVs.
+   - Reads and merges `fake` and `true` CSVs.
 
-3. **Data Understanding   
+3. **Data Understanding**
+   - Descriptive Statistics
+   - Class Distribution Analysis
+   - Exploratory Word Clouds
 
-3. **Text Preprocessing**  
+4. **Text Preprocessing**  
    - Cleaning: lowercasing, removing URLs, punctuation, and stopwords.  
    - Lemmatization: normalizing words.  
    - Combination: merging title + text for the “combined” dataset.
 
-4. **Model Training**  
+5. **Model Training**  
    - Logistic Regression trained on TF–IDF features.  
    - LSTM model created via custom `create_lstm_model()` function.  
    - BERT fine-tuned using HuggingFace `Trainer` API.
 
-5. **Evaluation**  
+6. **Evaluation**  
    - Accuracy, Precision, Recall, and F1-score computed for each variant.  
    - Stored predictions for Comparison Table
 
-6. **Artifact Saving**  
+7. **Artifact Saving**  
    - Trained models, vectorizers, and plots saved to `models/` and `results/` subfolders (auto-created).
 
-7. **Comparison Table**
+8. **Comparison Table**
    ```text
    | Model | Variant  | Accuracy | Precision | Recall | F1 |
 
